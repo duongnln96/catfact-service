@@ -1,19 +1,24 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
-	ff "github.com/duongnln96/catfact-service/catfacts-fact-finder/factfinder"
+	"github.com/duongnln96/catfact-service/catfacts-fact-finder/factfinder"
 	"github.com/spf13/viper"
 )
 
 // Config class
 type Config struct {
-	Metadata ff.Meta       `mapstructure:"Metadata"`
-	Cfg      ff.CoreConfig `mapstructure:"Config"`
+	ServiceInfo factfinder.ServiceInfo `mapstructure:"metadata"`
+	CoreConfig  factfinder.CoreConfig  `mapstructure:"core-config"`
 }
 
 var values Config
+
+func (cfg *Config) getServiceInfo() {
+	return fmt.Sprintf("Service %s: Version: %s", cfg.ServiceInfo.serviceID, cfg.ServiceInfo.version)
+}
 
 func init() {
 	config := viper.New()

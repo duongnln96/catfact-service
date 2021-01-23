@@ -2,17 +2,17 @@ package factfinder
 
 import "go.uber.org/zap"
 
-// Meta struct contain information about service
-type Meta struct {
-	serviceID string
-	version   string
+// ServiceInfo struct contain information about service
+type ServiceInfo struct {
+	serviceID string `mapstructure:"service"`
+	version   string `mapstructure:"version"`
 }
 
 // CoreConfig class
 type CoreConfig struct {
-	modeOffline   bool
-	port          int
-	localProtocal string
+	localPort     int    `mapstructure:"local-port"`
+	localProtocal string `mapstructure:"local-protocol"`
+	offlineMode   bool   `mapstructure:"offline-mode"`
 }
 
 type coreFactFinderConfig struct {

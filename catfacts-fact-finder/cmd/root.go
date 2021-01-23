@@ -16,7 +16,8 @@ var (
 
 func init() {
 	initLogger()
-	log.Infof("Service: %s \n version: %s \n", config.GetConfig().Metadata.serviceID, config.GetConfig().Metadata.version)
+	log.Infof("Service Infomation: %+v", config.GetConfig().ServiceInfo)
+	log.Infof("Service Config: %+v", config.GetConfig().CoreConfig)
 
 	go func() {
 		sign := <-getExitSignalChanel()
