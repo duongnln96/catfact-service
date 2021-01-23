@@ -16,8 +16,9 @@ type Config struct {
 
 var values Config
 
-func (cfg *Config) getServiceInfo() {
-	return fmt.Sprintf("Service %s: Version: %s", cfg.ServiceInfo.serviceID, cfg.ServiceInfo.version)
+// GetServiceInfo method
+func (cfg *Config) GetServiceInfo() string {
+	return fmt.Sprintf("Service %+v", cfg.ServiceInfo)
 }
 
 func init() {
