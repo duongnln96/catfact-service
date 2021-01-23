@@ -4,15 +4,15 @@ import "go.uber.org/zap"
 
 // ServiceInfo struct contain information about service
 type ServiceInfo struct {
-	serviceID string `mapstructure:"service"`
-	version   string `mapstructure:"version"`
+	ServiceID string `mapstructure:"service"`
+	Version   string `mapstructure:"version"`
 }
 
 // CoreConfig class
 type CoreConfig struct {
-	localPort     int    `mapstructure:"local-port"`
-	localProtocal string `mapstructure:"local-protocol"`
-	offlineMode   bool   `mapstructure:"offline-mode"`
+	LocalPort     int    `mapstructure:"local-port"`
+	LocalProtocal string `mapstructure:"local-protocol"`
+	OfflineMode   bool   `mapstructure:"offline-mode"`
 }
 
 type coreFactFinderConfig struct {

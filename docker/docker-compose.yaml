@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  fact-finder:
+    image: duongtomho/factfinder:v0.0.2
+    restart: always
+    volumes:
+      - ./../catfacts-fact-finder:/app

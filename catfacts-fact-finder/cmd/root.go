@@ -51,7 +51,7 @@ func initLogger() {
 var rootCmd = &cobra.Command{
 	Use: "fact finder test microservice",
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info("Hello world")
+		// #TODO
 	},
 }
 
