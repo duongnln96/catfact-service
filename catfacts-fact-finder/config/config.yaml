@@ -1,0 +1,8 @@
+Metadata:
+  ServiceID: "catfacts-fact-finder"
+  Version: "0.0.2"
+
+Config:
+  LocalPort: 8080
+  LocalProtocol: "http"
+  OfflineMode: "true"
