@@ -5,6 +5,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/duongnln96/catfact-service/catfacts-fact-finder/factfinder"
+
 	"github.com/duongnln96/catfact-service/catfacts-fact-finder/config"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -51,7 +53,14 @@ func initLogger() {
 var rootCmd = &cobra.Command{
 	Use: "fact finder test microservice",
 	Run: func(cmd *cobra.Command, args []string) {
-		// #TODO
+		app := factfinder.NewCoreFactFinder(factfinder.CoreFactFinderConfig{
+			Log:           log,
+			ModeOffline:   config.GetConfig().CoreConfig.OfflineMode,
+			Port:          config.GetConfig().CoreConfig.LocalPort,
+			LocalProtocal: config.GetConfig().CoreConfig.LocalProtocal,
+		})
+
+		app.Start()
 	},
 }
 

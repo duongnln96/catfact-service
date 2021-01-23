@@ -1,6 +1,11 @@
 package factfinder
 
-import "go.uber.org/zap"
+import (
+	"fmt"
+	"net/http"
+
+	"go.uber.org/zap"
+)
 
 // ServiceInfo struct contain information about service
 type ServiceInfo struct {
@@ -8,16 +13,33 @@ type ServiceInfo struct {
 	Version   string `mapstructure:"version"`
 }
 
-// CoreConfig class
+// CoreConfig struct
 type CoreConfig struct {
 	LocalPort     int    `mapstructure:"local-port"`
 	LocalProtocal string `mapstructure:"local-protocol"`
 	OfflineMode   bool   `mapstructure:"offline-mode"`
 }
 
-type coreFactFinderConfig struct {
+type jsonInterface struct {
+	Text string `json:"text"`
+}
+
+type catFact struct {
+	Text string `json:"text"`
+}
+
+// CoreFactFinderConfig include all config for processor
+type CoreFactFinderConfig struct {
+	Log           *zap.SugaredLogger
+	ModeOffline   bool
+	Port          int
+	LocalProtocal string
+}
+
+// CoreProcessor class
+type CoreProcessor struct {
 	log           *zap.SugaredLogger
-	modeOffline   bool
+	mode          bool
 	port          int
 	localProtocal string
 }
@@ -28,10 +50,29 @@ type ICoreFactFinder interface {
 	Stop()
 }
 
-func (ff *coreFactFinderConfig) Start() {
-	ff.log.Info("Start factfinder service")
+// NewCoreFactFinder function
+func NewCoreFactFinder(cfg CoreFactFinderConfig) ICoreFactFinder {
+	return &CoreProcessor{
+		log:           cfg.Log,
+		mode:          cfg.ModeOffline,
+		port:          cfg.Port,
+		localProtocal: cfg.LocalProtocal,
+	}
 }
 
-func (ff *coreFactFinderConfig) Stop() {
-	ff.log.Info("Stop factfinder service")
+// Start method
+func (core *CoreProcessor) Start() {
+	core.log.Info("Start factfinder service")
+
+	http.HandleFunc("/health", healthCheck)
+
+	localPort := fmt.Sprintf(":%d", core.port)
+
+	core.log.Fatal(http.ListenAndServe(localPort, nil))
+
+}
+
+// Stop method
+func (core *CoreProcessor) Stop() {
+	core.log.Info("Stop factfinder service")
 }

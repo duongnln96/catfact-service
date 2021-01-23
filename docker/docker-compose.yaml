@@ -3,5 +3,7 @@ services:
   fact-finder:
     image: duongtomho/factfinder:v0.0.2
     restart: always
+    ports:
+      - "8080:8080"
     volumes:
       - ./../catfacts-fact-finder:/app
