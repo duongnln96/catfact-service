@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/duongnln96/catfact-service/catfacts-fact-finder/factfinder"
 
@@ -55,6 +56,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		app := factfinder.NewCoreFactFinder(factfinder.CoreFactFinderConfig{
 			Log:           log,
+			Timeout:       10 * time.Second,
 			ModeOffline:   config.GetConfig().CoreConfig.OfflineMode,
 			Port:          config.GetConfig().CoreConfig.LocalPort,
 			LocalProtocal: config.GetConfig().CoreConfig.LocalProtocal,

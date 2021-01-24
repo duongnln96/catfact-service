@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"time"
 
 	"go.uber.org/zap"
 )
@@ -25,6 +26,7 @@ type CoreConfig struct {
 // CoreFactFinderConfig include all config for processor
 type CoreFactFinderConfig struct {
 	Log           *zap.SugaredLogger
+	Timeout       time.Duration
 	ModeOffline   bool
 	Port          int
 	LocalProtocal string
@@ -33,6 +35,7 @@ type CoreFactFinderConfig struct {
 // CoreProcessor class
 type CoreProcessor struct {
 	log           *zap.SugaredLogger
+	timeout       time.Duration
 	offlineMode   bool
 	port          int
 	localProtocal string
@@ -48,6 +51,7 @@ type ICoreFactFinder interface {
 func NewCoreFactFinder(cfg CoreFactFinderConfig) ICoreFactFinder {
 	return &CoreProcessor{
 		log:           cfg.Log,
+		timeout:       cfg.Timeout,
 		offlineMode:   cfg.ModeOffline,
 		port:          cfg.Port,
 		localProtocal: cfg.LocalProtocal,
@@ -88,7 +92,9 @@ func (core *CoreProcessor) catFactOnline() (string, error) {
 	url := "https://cat-fact.herokuapp.com/facts/random"
 	req, err := http.NewRequest("GET", url, nil)
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: core.timeout,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		core.log.Errorf("Failed to send HTTP request %+v", err)
