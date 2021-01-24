@@ -4,4 +4,4 @@ metadata:
 core-config:
   local-port: 8080
   local-protocol: "http"
-  offline-mode: true
+  offline-mode: false
