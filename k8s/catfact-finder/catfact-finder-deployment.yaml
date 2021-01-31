@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catfact-finder-deploy
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: catfact-finder
+  template:
+    metadata:
+      labels:
+        app: catfact-finder
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: catfact-finder-volumess
+            items:
+              - key: catfacts-fact-finder
+                path: ./../../catfacts-fact-finder
+      containers:
+      - name: catfact-finder
+        image: duongtomho/factfinder:v0.0.3
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: FINDFACT_OFFLINE
+            value: "true"
+          - name: LOCAL_PORT
+            value: "8080"
+          - name: LOCAL_PROTOCOL
+            value: "http"
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
