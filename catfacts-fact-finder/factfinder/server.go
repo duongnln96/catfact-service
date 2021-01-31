@@ -10,18 +10,10 @@ import (
 	"go.uber.org/zap"
 )
 
-// ServiceInfo struct contain information about service
-type ServiceInfo struct {
-	ServiceID string `mapstructure:"service"`
-	Version   string `mapstructure:"version"`
-}
-
-// CoreConfig struct
-type CoreConfig struct {
-	LocalPort     int    `mapstructure:"local-port"`
-	LocalProtocal string `mapstructure:"local-protocol"`
-	OfflineMode   bool   `mapstructure:"offline-mode"`
-}
+var (
+	serviceID string = "catfacts-fact-finder service"
+	version   string = "v0.0.2"
+)
 
 // CoreFactFinderConfig include all config for processor
 type CoreFactFinderConfig struct {
@@ -43,7 +35,7 @@ type CoreProcessor struct {
 
 // ICoreFactFinder interface
 type ICoreFactFinder interface {
-	Start()
+	Start() error
 	Stop()
 }
 
@@ -144,7 +136,7 @@ func (core *CoreProcessor) catFactOffline() (string, error) {
 }
 
 // Start method
-func (core *CoreProcessor) Start() {
+func (core *CoreProcessor) Start() error {
 	core.log.Info("Start factfinder service")
 
 	http.HandleFunc("/health", core.healthCheck)
@@ -152,8 +144,13 @@ func (core *CoreProcessor) Start() {
 
 	localPort := fmt.Sprintf(":%d", core.port)
 
-	core.log.Fatal(http.ListenAndServe(localPort, nil))
+	err := http.ListenAndServe(localPort, nil)
+	if err != nil {
+		core.log.Fatalf("Start server fail: %+v", err)
+		return err
+	}
 
+	return nil
 }
 
 // Stop method

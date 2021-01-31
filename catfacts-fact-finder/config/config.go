@@ -1,30 +1,25 @@
 package config
 
 import (
-	"fmt"
 	"log"
 
-	"github.com/duongnln96/catfact-service/catfacts-fact-finder/factfinder"
 	"github.com/spf13/viper"
 )
 
-// Config class
+// Config struct
 type Config struct {
-	ServiceInfo factfinder.ServiceInfo `mapstructure:"metadata"`
-	CoreConfig  factfinder.CoreConfig  `mapstructure:"core-config"`
+	LocalPort     int    `mapstructure:"LOCAL_PORT"`
+	LocalProtocal string `mapstructure:"LOCAL_PROTOCOL"`
+	OfflineMode   bool   `mapstructure:"FINDFACT_OFFLINE"`
 }
 
 var values Config
-
-// GetServiceInfo method
-func (cfg *Config) GetServiceInfo() string {
-	return fmt.Sprintf("Service %+v", cfg.ServiceInfo)
-}
 
 func init() {
 	config := viper.New()
 	config.SetConfigName("config")
 	config.AddConfigPath("./config/")
+	config.AutomaticEnv()
 
 	if err := config.ReadInConfig(); err != nil {
 		log.Fatalf("Error while reading config: %s", err)

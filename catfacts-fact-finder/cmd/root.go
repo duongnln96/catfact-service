@@ -19,8 +19,6 @@ var (
 
 func init() {
 	initLogger()
-	log.Infof("Service Infomation: %+v", config.GetConfig().ServiceInfo)
-	log.Infof("Service Config: %+v", config.GetConfig().CoreConfig)
 
 	go func() {
 		sign := <-getExitSignalChanel()
@@ -57,11 +55,10 @@ var rootCmd = &cobra.Command{
 		app := factfinder.NewCoreFactFinder(factfinder.CoreFactFinderConfig{
 			Log:           log,
 			Timeout:       10 * time.Second,
-			ModeOffline:   config.GetConfig().CoreConfig.OfflineMode,
-			Port:          config.GetConfig().CoreConfig.LocalPort,
-			LocalProtocal: config.GetConfig().CoreConfig.LocalProtocal,
+			ModeOffline:   config.GetConfig().OfflineMode,
+			Port:          config.GetConfig().LocalPort,
+			LocalProtocal: config.GetConfig().LocalProtocal,
 		})
-
 		app.Start()
 	},
 }
