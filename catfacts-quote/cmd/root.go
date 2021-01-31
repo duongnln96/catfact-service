@@ -4,7 +4,10 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
+	"github.com/duongnln96/catfact-service/catfacts-quote/config"
+	"github.com/duongnln96/catfact-service/catfacts-quote/quotehandler"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -48,7 +51,17 @@ func initLogger() {
 var rootCmd = &cobra.Command{
 	Use: "fact finder test microservice",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO
+		app := quotehandler.NewCoreCatQuote(quotehandler.CoreCatfactQuoteConfig{
+			Log:                log,
+			Timeout:            15 * time.Second,
+			LocalPort:          config.GetConfig().LocalPort,
+			LocalProtocal:      config.GetConfig().LocalProtocol,
+			FactFinderHost:     config.GetConfig().FactFinderHost,
+			FactFinderPort:     config.GetConfig().FactFinderPort,
+			FactFinderProtocol: config.GetConfig().FactFinderProtocol,
+			FactFinderURI:      config.GetConfig().FactFinderURI,
+		})
+		app.Start()
 	},
 }
 
