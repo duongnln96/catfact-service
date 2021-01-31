@@ -1,9 +1,23 @@
 version: "3.3"
 services:
   fact-finder:
-    image: duongtomho/factfinder:v0.0.2
+    image: duongtomho/factfinder:v0.0.3
     restart: always
     ports:
       - "8080:8080"
     volumes:
       - ./../catfacts-fact-finder:/app
+
+  quote-handler:
+    image: duongtomho/catquote:v0.0.1
+    depends_on:
+      - fact-finder
+    restart: always
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./../catfacts-quote:/app
+    env_file: 
+      - ./../catfacts-quote/config/config.env
+    environment:
+      FACT_FINDER_HOST: fact-finder
