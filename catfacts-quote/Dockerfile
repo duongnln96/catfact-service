@@ -1,5 +1,16 @@
 FROM golang:1.15-alpine
+
 COPY . /app
-RUN cd /app && go build .
+RUN cd /app && go build -o catfact-quote
 WORKDIR /app
-CMD ["go", "run", "."]
+
+ENV LOCAL_PORT=8050
+ENV LOCAL_PROTOCOL="http"
+ENV FACT_FINDER_HOST="127.0.0.1"
+ENV FACT_FINDER_PORT=8080
+ENV FACT_FINDER_PROTOCOL=http
+ENV FACT_FINDER_URI=/factfinder
+
+EXPOSE $LOCAL_PORT
+
+CMD ./catfact-quote
