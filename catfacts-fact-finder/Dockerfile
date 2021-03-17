@@ -1,4 +1,4 @@
-FROM golang:1.14-alpine
+FROM golang:1.15-alpine
 COPY . /app
 RUN cd /app && go build -o catfact-finder
 WORKDIR /app
@@ -9,4 +9,4 @@ ENV FINDFACT_OFFLINE=false
 
 EXPOSE $LOCAL_PORT
 
-CMD ./catfact-finder
+CMD ["./catfact-finder"]

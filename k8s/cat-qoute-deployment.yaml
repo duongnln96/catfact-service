@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cat-quote-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cat-quote
+  template:
+    metadata:
+      labels:
+        app: cat-quote
+    spec:
+      containers:
+      - name: cat-quote
+        image: duongtomho/catquote:v1.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: quote-http
+          containerPort: 8050
+        env:
+        - name: FACT_FINDER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-quote-configmaps
+              key: FACT_FINDER_HOST
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8050
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8050
+          

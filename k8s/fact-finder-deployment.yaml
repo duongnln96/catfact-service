@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fact-finder-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fact-finder
+  template:
+    metadata:
+      labels:
+        app: fact-finder
+    spec:
+      containers:
+      - name: factfinder
+        image: duongtomho/factfinder:v1.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: FINDFACT_OFFLINE
+          valueFrom:
+            configMapKeyRef:
+              name: fact-finder-configmaps
+              key: FINDFACT_OFFLINE
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
